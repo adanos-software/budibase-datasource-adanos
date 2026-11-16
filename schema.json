@@ -1,0 +1,49 @@
+{
+  "type": "datasource",
+  "metadata": {},
+  "schema": {
+    "docs": "https://github.com/adanos-software/budibase-datasource-adanos#readme",
+    "friendlyName": "Adanos Market Sentiment",
+    "type": "API",
+    "description": "Read stock and crypto sentiment from Adanos",
+    "datasource": {
+      "apiKey": { "type": "password", "required": true, "display": "Adanos API key" }
+    },
+    "query": {
+      "read": {
+        "displayName": "Asset detail",
+        "type": "fields",
+        "readable": true,
+        "fields": {
+          "symbol": { "type": "string", "required": true, "display": "Ticker or token symbol" },
+          "from": { "type": "string", "required": false, "display": "From (inclusive UTC YYYY-MM-DD)" },
+          "to": { "type": "string", "required": false, "display": "To (inclusive UTC YYYY-MM-DD)" }
+        }
+      },
+      "trending": {
+        "displayName": "Trending assets",
+        "type": "fields",
+        "readable": true,
+        "fields": {
+          "from": { "type": "string", "required": false, "display": "From (inclusive UTC YYYY-MM-DD)" },
+          "to": { "type": "string", "required": false, "display": "To (inclusive UTC YYYY-MM-DD)" },
+          "limit": { "type": "number", "required": false, "display": "Limit (1-100)", "default": 20 },
+          "offset": { "type": "number", "required": false, "display": "Offset", "default": 0 },
+          "stockType": { "type": "string", "required": false, "display": "Stock type (stock, etf, all; stocks only)" },
+          "newsSource": { "type": "string", "required": false, "display": "News publisher filter (News only)" }
+        }
+      }
+    },
+    "extra": {
+      "source": {
+        "type": "list",
+        "displayName": "Source",
+        "required": true,
+        "data": {
+          "read": ["reddit_stocks", "x_stocks", "news_stocks", "polymarket_stocks", "reddit_crypto"],
+          "trending": ["reddit_stocks", "x_stocks", "news_stocks", "polymarket_stocks", "reddit_crypto"]
+        }
+      }
+    }
+  }
+}
