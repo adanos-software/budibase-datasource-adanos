@@ -47,6 +47,8 @@ Choose a Source for each query:
 The Source dropdown is native Budibase extra-query configuration. Budibase saves
 it as `query.fields.extra.source`; the adapter reads that nested value, not a
 top-level `source` argument.
+When switching query functions, Budibase can retain the previous function's
+inputs. The adapter ignores those inactive fields.
 
 **Asset detail** requires `symbol`, for example `AAPL` or `BTC`. It returns an
 array with one API response object so it can serve a Budibase Data provider.

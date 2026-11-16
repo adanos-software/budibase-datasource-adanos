@@ -108,6 +108,14 @@ test("accepts the native builder's empty fields editor placeholder", async () =>
   await assert.rejects(datasource().trending({ fields: "unexpected", extra: { source: "reddit_stocks" } }), /Unsupported/)
 })
 
+test("switching native query functions tolerates retained inactive fields", async () => {
+  const fields = { fields: "", extra: { source: "reddit_stocks" }, symbol: "AAPL", limit: 2, offset: 1 }
+  reply("/reddit/stocks/v1/trending?limit=2&offset=1", [{ ticker: "AAPL" }])
+  assert.deepEqual(await datasource().trending(fields), [{ ticker: "AAPL" }])
+  reply("/reddit/stocks/v1/stock/AAPL", { ticker: "AAPL" })
+  assert.deepEqual(await datasource().read(fields), [{ ticker: "AAPL" }])
+})
+
 test("News supports publisher filtering and stock type with builder numeric strings", async () => {
   reply("/news/stocks/v1/trending?from=2026-11-01&limit=10&offset=0&type=etf&source=reuters", [])
   assert.deepEqual(await datasource().trending({ extra: { source: "news_stocks" }, from: "2026-11-01",
@@ -166,7 +174,7 @@ for (const input of [undefined, null, {}, { apiKey: " " }, { apiKey: 3 }]) {
 }
 
 for (const query of [{ source: "reddit_stocks" }, { source: "reddit_stocks", symbol: " " },
-  { source: "reddit_stocks", symbol: "AAPL", limit: 1 }]) {
+  { source: "reddit_stocks", symbol: "AAPL", unexpected: 1 }]) {
   test(`detail rejects invalid fields: ${JSON.stringify(query)}`, async () => {
     const { source, ...fields } = query
     await assert.rejects(datasource().read({ ...fields, extra: { source } }), /symbol is required|Unsupported query fields/)

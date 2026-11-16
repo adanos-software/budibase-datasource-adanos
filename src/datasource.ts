@@ -44,8 +44,10 @@ function source(value: unknown): Source {
   return value
 }
 
-function queryFields(value: unknown, allowed: string[]) {
+function queryFields(value: unknown) {
   const fields = object(value)
+  // Switching native query functions retains the other function's input fields.
+  const allowed = ["extra", "symbol", "from", "to", "limit", "offset", "stockType", "newsSource"]
   // QueryViewer initializes this empty editor placeholder for fields-type queries.
   if (Object.keys(fields).some(key => !allowed.includes(key) && !(key === "fields" && fields[key] === ""))) {
     throw new Error("Unsupported query fields")
@@ -81,7 +83,7 @@ export default class AdanosDatasource implements IntegrationBase {
   }
 
   async read(query: unknown) {
-    const { fields, source, from, to } = queryFields(query, ["extra", "symbol", "from", "to"])
+    const { fields, source, from, to } = queryFields(query)
     const symbol = text(fields.symbol)
     if (!symbol) throw new Error("A ticker or token symbol is required")
     const result = await safeRequest(async () => {
@@ -97,8 +99,7 @@ export default class AdanosDatasource implements IntegrationBase {
   }
 
   async trending(query: unknown) {
-    const { fields, source, from, to } = queryFields(query,
-      ["extra", "from", "to", "limit", "offset", "stockType", "newsSource"])
+    const { fields, source, from, to } = queryFields(query)
     const limit = integer(fields.limit, 1, 100)
     const offset = integer(fields.offset, 0)
     const type = text(fields.stockType)
