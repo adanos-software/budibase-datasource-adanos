@@ -1,0 +1,27 @@
+{
+  "name": "budibase-datasource-adanos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only Adanos stock and crypto sentiment datasource for Budibase",
+  "main": "plugin.min.js",
+  "license": "MIT",
+  "repository": "github:adanos-software/budibase-datasource-adanos",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node build.mjs",
+    "test": "npm run build && node --test test/*.test.cjs",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "finance-sentiment": "2.8.1"
+  },
+  "devDependencies": {
+    "@budibase/types": "4.0.1",
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.28.2",
+    "tar": "^7.5.0",
+    "typescript": "^5.9.0",
+    "undici": "^7.16.0"
+  }
+}
